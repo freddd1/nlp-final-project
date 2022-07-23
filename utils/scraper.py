@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from tqdm import tqdm
+from config import data_paths
 
 
 def get_description(web: BeautifulSoup) -> str:
@@ -108,26 +109,33 @@ def get_opt_knowledge(web: BeautifulSoup) -> list:
 if __name__ == "__main__":
     columns = ['occupation', 'code', 'description', 'alternative_labels', 'skills',
                'knowledge', 'opt_skills', 'opt_knowledge']
-    a = []
-    meta_data = pd.read_csv('data/titles.test.csv')
-    for url in tqdm(meta_data['conceptUri'], desc='Progress Bar'):
-        redirected_url = 'https://esco.ec.europa.eu/en/classification/occupation?uri='
-        r = requests.get(redirected_url + url)
-        soup = BeautifulSoup(r.content, 'html5lib')
-        try:
-            occupation = str(soup.findAll('h3')[0].string).strip()
-            code = get_code(soup)
-            description = get_description(soup)
-            alternative_labels = get_atr_label(soup)
-            skills = get_skills(soup)
-            knowledge = get_knowledge(soup)
-            opt_skills = get_opt_skills(soup)
-            opt_knowledge = get_opt_knowledge(soup)
-            row = [occupation, code, description, alternative_labels, skills, knowledge, opt_skills, opt_knowledge]
-            a.append(row)
-        except:
-            print('Skipping-{} '.format(url))
-        # break
 
-    df = pd.DataFrame(a, columns=columns)
-    df.to_excel("data/df.xlsx")
+    for phase in data_paths:
+        metadata_name = data_paths[phase]['metadata']
+        data_name = data_paths[phase]['data']
+
+        a = []
+        meta_data = pd.read_csv(f'../data/{metadata_name}')
+
+        for i, url in enumerate(tqdm(meta_data['conceptUri'], desc='Progress Bar')):
+            redirected_url = 'https://esco.ec.europa.eu/en/classification/occupation?uri='
+            r = requests.get(redirected_url + url)
+            soup = BeautifulSoup(r.content, 'html5lib')
+            try:
+                occupation = str(soup.findAll('h3')[0].string).strip()
+                code = get_code(soup)
+                description = get_description(soup)
+                alternative_labels = get_atr_label(soup)
+                skills = get_skills(soup)
+                knowledge = get_knowledge(soup)
+                opt_skills = get_opt_skills(soup)
+                opt_knowledge = get_opt_knowledge(soup)
+                row = [occupation, code, description, alternative_labels, skills, knowledge, opt_skills, opt_knowledge]
+                a.append(row)
+            except:
+                print('Skipping-{} '.format(url))
+
+        print(f'{phase} is done.')
+
+        df = pd.DataFrame(a, columns=columns)
+        df.to_excel(f"../data/{data_name}")
