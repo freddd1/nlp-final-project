@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from tqdm import tqdm
-from config import data_paths
+from config import DATA_PATHS
 
 
 def get_description(web: BeautifulSoup) -> str:
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     columns = ['occupation', 'code', 'description', 'alternative_labels', 'skills',
                'knowledge', 'opt_skills', 'opt_knowledge']
 
-    for phase in data_paths:
+    for phase in DATA_PATHS:
         metadata_name = data_paths[phase]['metadata']
         data_name = data_paths[phase]['data']
 

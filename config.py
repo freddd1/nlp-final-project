@@ -1,4 +1,4 @@
-data_paths = {
+DATA_PATHS = {
     'train': {
               'metadata': 'titles.csv',
               'data': 'train.xlsx'
