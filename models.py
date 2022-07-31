@@ -43,3 +43,7 @@ class BERT(nn.Module):
                 param.requires_grad = True
             else:
                 param.requires_grad = False
+
+
+class tBERT(nn.Module):
+    pass
