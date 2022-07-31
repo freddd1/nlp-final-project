@@ -1,16 +1,16 @@
-from typing import List
+from typing import List, Optional, Union
 import torch
 from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
 from tqdm.auto import tqdm
 from sklearn.metrics import f1_score
 from transformers import get_scheduler
-from models import BERT
+from models import BERT, tBERT
 
 
 class Trainer:
     def __init__(self,
-                 model,
+                 model: Union[BERT, tBERT],
                  optimizer: torch.optim,
                  train_dataloader: DataLoader,
                  num_epochs: int = 5,
@@ -35,8 +35,8 @@ class Trainer:
 
         self.loss_func = CrossEntropyLoss()
 
-        self.train_losses: List[List[float]] = []
-        self.eval_losses: List[float] = []
+        self.train_losses: Optional[List[List[float]]] = []
+        self.eval_losses: Optional[List[float]] = []
 
     def train(self):
         self.model.train()
@@ -77,7 +77,7 @@ class Trainer:
 
         self.progress_bar = tqdm(range(len(dataloader)))
         for batch in dataloader:
-            all_labels.extend(batch['labels'])
+            all_labels.extend(batch['labels'].tolist())
 
             outputs = self.model(**batch)
             if not isinstance(outputs, torch.Tensor):
@@ -92,4 +92,4 @@ class Trainer:
             self.eval_losses.append(loss.item())
             self.progress_bar.update(1)
 
-        return f1_score(all_labels, all_preds)
+        return all_labels, all_preds
