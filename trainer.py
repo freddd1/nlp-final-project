@@ -1,8 +1,9 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 import torch
 from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
 from tqdm.auto import tqdm
+import numpy as np
 from sklearn.metrics import f1_score
 from transformers import get_scheduler
 from models import BERT, tBERT
@@ -69,7 +70,7 @@ class Trainer:
 
         return loss.item()
 
-    def evaluate(self, dataloader):
+    def evaluate(self, dataloader: DataLoader):
         self.model.eval()
         self.model.to(self.device)
 
@@ -92,4 +93,10 @@ class Trainer:
             self.eval_losses.append(loss.item())
             self.progress_bar.update(1)
 
-        return all_labels, all_preds
+        return self._validate_outputs(all_labels, all_preds)
+
+    @staticmethod
+    def _validate_outputs(labels: List[Union[torch.Tensor, float, int]], preds: List[Union[torch.Tensor, float, int]]) -> Tuple[List[int], List[int]]:
+        labels = list(np.nan_to_num(np.array(labels), 0))
+        preds = list(np.nan_to_num(np.array(preds), 0))
+        return [int(l) for l in labels], [int(p) for p in preds]
