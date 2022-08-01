@@ -1,6 +1,7 @@
-import os.path
 import pandas as pd
-
+from torch.utils.data import DataLoader
+from typing import List
+import itertools
 
 def combine_scraped_data(path_to_data: str, path_to_metadata: str, is_train=True) -> None:
     output_name = 'train' if 'train' in path_to_data else 'test'
@@ -34,3 +35,9 @@ def labels_indexes_mapping(df: pd.DataFrame) -> (dict, dict):
     label_to_idx = {l: i for i, l in enumerate(df.labels.unique())}
     idx_to_label = {i: l for i, l in enumerate(df.labels.unique())}
     return label_to_idx, idx_to_label
+
+
+def create_titles_corpus(dl: DataLoader) -> List:
+    titles = []
+    titles.extend([batch['titles'] for batch in dl])
+    return list(itertools.chain(*titles))
