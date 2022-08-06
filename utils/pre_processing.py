@@ -17,8 +17,14 @@ def combine_scraped_data(path_to_data: str, path_to_metadata: str, is_train=True
     # save
     df.to_excel(f'data/{output_name}_processed.xlsx')
 
+def clean_scraped_data_to_code(path_to_data: str) -> pd.DataFrame:
+    df = pd.read_excel(path_to_data)
+    df = df[['vacancyTitle','code']].rename(columns={'code': 'labels', 'vacancyTitle': 'title'})
+    df.loc[:, 'title'] = df.title.apply(clean_str)
+    return df
 
-def clean_scraped_data(path_to_data: str) -> pd.DataFrame:
+
+def clean_scraped_data_to_title(path_to_data: str) -> pd.DataFrame:
     df = pd.read_excel(path_to_data)
     df = df[['occupation', 'vacancyTitle']].rename(columns={'occupation': 'labels', 'vacancyTitle': 'title'})
     df.loc[:, 'title'] = df.title.apply(clean_str)
