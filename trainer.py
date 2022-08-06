@@ -14,9 +14,11 @@ class Trainer:
                  model: Union[BERT, tBERT],
                  optimizer: torch.optim,
                  train_dataloader: DataLoader,
+                 params: dict = None,
                  num_epochs: int = 5,
                  device='cpu'):
 
+        self.params = params
         self.progress_bar = None
         self.device = device
         self.num_epochs = num_epochs
