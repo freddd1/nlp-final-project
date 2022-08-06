@@ -37,7 +37,7 @@ class BERT(nn.Module):
     def _bert_finetune_last_layers(self):
         # this will make only the last encoding layers to be learned
         # set the other layers to be frozen
-        layers_to_learn = ["classifier.", "pooler", "encoder.layer.11"]
+        layers_to_learn = ["classifier.", "pooler", "encoder.layer.11", "encoder.layer.10"]
         for name, param in self.bert.named_parameters():
             to_update = [True if layer in name else False for layer in layers_to_learn]
             if any(to_update):
@@ -52,6 +52,7 @@ class tBERT(nn.Module):
                  model_name: str = 'bert-base-uncased',
                  num_labels: int = 2,
                  n_topics: int = 40,
+                 alpha: float = None,
                  max_length=64,
                  device='cpu'
                  ):
@@ -67,16 +68,16 @@ class tBERT(nn.Module):
         self.bert = BertModel.from_pretrained(model_name)
         self._bert_finetune_last_layers()  # Only train the final layers of bert. Freeze all the others
 
-        self.lda = LatentDirichletAllocation(n_components=n_topics)
+        self.lda = LatentDirichletAllocation(n_components=n_topics, doc_topic_prior=alpha)
         embedded_corpus = self.tokenize(corpus)['input_ids']
         assert len(corpus) == embedded_corpus.shape[0], 'error with the embedded_sentences'
         self.lda.fit(embedded_corpus)
 
         self.classifier = nn.Sequential(
-            nn.Linear(768 + n_topics, 1024, bias=True),
+            nn.Linear(768 + n_topics, 500, bias=True),
             nn.Dropout(0.2),
             nn.Tanh(),
-            nn.Linear(1024, num_labels, bias=True),
+            nn.Linear(500, num_labels, bias=True),
             nn.Softmax(dim=1),
         )
 
