@@ -111,8 +111,8 @@ if __name__ == "__main__":
                'knowledge', 'opt_skills', 'opt_knowledge']
 
     for phase in DATA_PATHS:
-        metadata_name = data_paths[phase]['metadata']
-        data_name = data_paths[phase]['data']
+        metadata_name = DATA_PATHS[phase]['metadata']
+        data_name = DATA_PATHS[phase]['data']
 
         a = []
         meta_data = pd.read_csv(f'../data/{metadata_name}')
