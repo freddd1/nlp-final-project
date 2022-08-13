@@ -1,4 +1,4 @@
-name: aml
+name: nlp-final-project
 channels:
   - pytorch
   - huggingface
