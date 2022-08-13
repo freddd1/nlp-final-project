@@ -163,6 +163,7 @@ dependencies:
   - pandocfilters=1.5.0=pyhd8ed1ab_0
   - parquet-cpp=1.5.1=2
   - parso=0.8.3=pyhd8ed1ab_0
+  - patsy=0.5.2=pyhd8ed1ab_0
   - pbr=5.9.0=pyhd8ed1ab_0
   - pickleshare=0.7.5=py_1003
   - pillow=9.1.0=py38hd8e0db4_2
@@ -211,6 +212,8 @@ dependencies:
   - sacremoses=master=py_0
   - scikit-learn=1.0.2=py38hb60ee80_0
   - scipy=1.8.0=py38ha1292f7_1
+  - seaborn=0.11.2=hd8ed1ab_0
+  - seaborn-base=0.11.2=pyhd8ed1ab_0
   - send2trash=1.8.0=pyhd8ed1ab_0
   - setuptools=62.1.0=py38haa244fe_0
   - six=1.16.0=pyh6c4a22f_0
@@ -220,6 +223,7 @@ dependencies:
   - sqlalchemy=1.4.39=py38h294d835_0
   - sqlite=3.38.2=h8ffe710_0
   - stack_data=0.2.0=pyhd8ed1ab_0
+  - statsmodels=0.13.2=py38hbdcd294_0
   - stevedore=4.0.0=pyhd8ed1ab_0
   - tbb=2021.5.0=h2d74725_1
   - terminado=0.13.3=py38haa244fe_1
